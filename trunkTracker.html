@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>DHT Trunk Tracker</title>
+        <style>
+            @keyframes blink {
+                0%,
+                50%,
+                100% {
+                    opacity: 1;
+                }
+
+                25%,
+                75% {
+                    opacity: .25;
+                }
+            }
+            .box{
+                width: 24vw;
+                border-radius: 10px;
+            }
+            .basic{
+                background: rgb(80, 76, 136);
+            }
+            .arrive{
+                background: #e6bb6c;
+            }
+            .loaded{
+                background: #64e25f;
+            }
+            .departure{
+                background: #c22929;
+                color: #ffffff;
+                animation: blink 2s ease 0s infinite normal forwards;
+            }
+            .departed{
+                background: rgb(80, 76, 136);;
+            }
+        </style>
+    </head>
+    <body style="padding: 0; margin: 0; height: 100vh;">
+        <div id="trunks" style="height: 100%; width: 100vw; display: flex; flex-wrap: wrap; align-content: center; justify-content: space-evenly; text-align: center; column-gap: 1px; row-gap: 50px; background: rgb(44, 41, 87); font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; color: rgb(0, 8, 46);">
+            <div id="akw" class="box basic">
+                <h2>AKW/Russells</h2>
+                <h3><span id="akwDeparture"></span></h3>
+            </div>
+            <div id="viamaster" class="box basic">
+                <h2>Viamaster</h2>
+                <h3><span id="viamasterDeparture"></span></h3>
+            </div>
+            <div id="klink1" class="box basic">
+                <h2>KLINK1</h2>
+                <h3><span id="klink1Departure"></span></h3>
+            </div>
+            <div id="klink2" class="box basic">
+                <h2>KLINK2</h2>
+                <h3><span id="klink2Departure"></span></h3>
+            </div>
+            <div id="palletforce1" class="box basic">
+                <h2>Palletforce 1</h2>
+                <h3><span id="pf1Departure"></span></h3>
+            </div>
+            <div id="palletforce2" class="box basic ">
+                <h2>Palletforce 2</h2>
+                <h3><span id="pf2Departure"></span></h3>
+            </div>
+            <div id="palletforce3" class="box basic">
+                <h2>Palletforce 3</h2>
+                <h3><span id="pf3Departure"></span></h3>
+            </div>
+            <div id="palletline" class="box basic">
+                <h2>Palletline</h2>
+                <h3><span id="plDeparture"></span></h3>
+            </div>
+            <div id="europa" class="box basic">
+                <h2>Europa</h2>
+                <h3><span id="europaDeparture"></span></h3>
+            </div>
+            <div id="gefco" class="box basic" onclick="departed('gefco')">
+                <h2>Gefco</h2>
+                <h3><span id="gefcoDeparture"></span></h3>
+            </div>
+            <div id="tvs" class="box basic" onclick="departed('tvs')">
+                <h2>TVS</h2>
+                <h3><span id="tvsDeparture"></span></h3>
+            </div>
+        </div>
+        <script>
+            function departed(trunk){
+                var box = document.getElementById(trunk)
+                box.classList.remove("departure");
+                box.classList.remove("loaded");
+                box.classList.remove("basic");
+                box.classList.remove("arrive");
+                box.classList.add("departed");
+            }
+            (function() {
+                var start = new Date;
+                start.setHours(20, 30, 0);
+
+                function pad(num) {
+                    return ("0" + parseInt(num)).substr(-2);
+                }
+
+                function tick() {
+                    var now = new Date;
+                    if (now > start) {
+                    start.setDate(start.getDate() + 1);
+                    }
+                    if(document.getElementById('akw').classList.contains('departed') == true){
+                        document.getElementById('akwDeparture').innerHTML = "Departed";
+                        return;
+                    }
+                    var remain = ((start - now) / 1000);
+                    var hh = pad((remain / 60 / 60) % 60);
+                    var mm = pad((remain / 60) % 60);
+                    var ss = pad(remain % 60);
+                    document.getElementById('akwDeparture').innerHTML = hh + ":" + mm + ":" + ss;
+                    var box = document.getElementById('akw')
+                    box.addEventListener('click', function() { departed('akw') });
+                    if( hh < 1 && mm >= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.add("arrive");
+                    }else if( hh == 0 && mm <= 10 ){
+                        box.classList.add("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }else if( hh == 0 && mm <= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.add("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }
+                    setTimeout(tick, 1000);
+                }
+
+                document.addEventListener('DOMContentLoaded', tick);
+            })();
+            (function() {
+                var start = new Date;
+                start.setHours(22, 0, 0);
+
+                function pad(num) {
+                    return ("0" + parseInt(num)).substr(-2);
+                }
+
+                function tick() {
+                    var now = new Date;
+                    if (now > start) {
+                    start.setDate(start.getDate() + 1);
+                    }
+                    if(document.getElementById('viamaster').classList.contains('departed') == true){
+                        document.getElementById('viamasterDeparture').innerHTML = "Departed";
+                        return;
+                    }
+                    var remain = ((start - now) / 1000);
+                    var hh = pad((remain / 60 / 60) % 60);
+                    var mm = pad((remain / 60) % 60);
+                    var ss = pad(remain % 60);
+                    document.getElementById('viamasterDeparture').innerHTML = hh + ":" + mm + ":" + ss;
+                    var box = document.getElementById('viamaster')
+                    box.addEventListener('click', function() { departed('viamaster') });
+                    if( hh < 1 && mm >= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.add("arrive");
+                    }else if( hh == 0 && mm <= 10 ){
+                        box.classList.add("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }else if( hh == 0 && mm <= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.add("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }
+                    setTimeout(tick, 1000);
+                }
+
+                document.addEventListener('DOMContentLoaded', tick);
+            })();
+            (function() {
+                var start = new Date;
+                start.setHours(21, 0, 0);
+
+                function pad(num) {
+                    return ("0" + parseInt(num)).substr(-2);
+                }
+
+                function tick() {
+                    var now = new Date;
+                    if (now > start) {
+                    start.setDate(start.getDate() + 1);
+                    }
+                    if(document.getElementById('klink1').classList.contains('departed') == true){
+                        document.getElementById('klink1Departure').innerHTML = "Departed";
+                        return;
+                    }
+                    var remain = ((start - now) / 1000);
+                    var hh = pad((remain / 60 / 60) % 60);
+                    var mm = pad((remain / 60) % 60);
+                    var ss = pad(remain % 60);
+                    document.getElementById('klink1Departure').innerHTML = hh + ":" + mm + ":" + ss;
+                    var box = document.getElementById('klink1')
+                    box.addEventListener('click', function() { departed('klink1') });
+                    if( hh < 1 && mm >= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.add("arrive");
+                    }else if( hh == 0 && mm <= 10 ){
+                        box.classList.add("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }else if( hh == 0 && mm <= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.add("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }
+                    setTimeout(tick, 1000);
+                }
+
+                document.addEventListener('DOMContentLoaded', tick);
+            })();
+            (function() {
+                var start = new Date;
+                start.setHours(21, 0, 0);
+
+                function pad(num) {
+                    return ("0" + parseInt(num)).substr(-2);
+                }
+
+                function tick() {
+                    var now = new Date;
+                    if (now > start) {
+                    start.setDate(start.getDate() + 1);
+                    }
+                    if(document.getElementById('klink2').classList.contains('departed') == true){
+                        document.getElementById('klink2Departure').innerHTML = "Departed";
+                        return;
+                    }
+                    var remain = ((start - now) / 1000);
+                    var hh = pad((remain / 60 / 60) % 60);
+                    var mm = pad((remain / 60) % 60);
+                    var ss = pad(remain % 60);
+                    document.getElementById('klink2Departure').innerHTML = hh + ":" + mm + ":" + ss;
+                    var box = document.getElementById('klink2')
+                    box.addEventListener('click', function() { departed('klink2') });
+                    if( hh < 1 && mm >= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.add("arrive");
+                    }else if( hh == 0 && mm <= 10 ){
+                        box.classList.add("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }else if( hh == 0 && mm <= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.add("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }
+                    setTimeout(tick, 1000);
+                }
+
+                document.addEventListener('DOMContentLoaded', tick);
+            })();
+            (function() {
+                var start = new Date;
+                start.setHours(19, 0, 0);
+
+                function pad(num) {
+                    return ("0" + parseInt(num)).substr(-2);
+                }
+
+                function tick() {
+                    var now = new Date;
+                    if (now > start) {
+                    start.setDate(start.getDate() + 1);
+                    }
+                    if(document.getElementById('palletforce1').classList.contains('departed') == true){
+                        document.getElementById('pf1Departure').innerHTML = "Departed";
+                        return;
+                    }
+                    var remain = ((start - now) / 1000);
+                    var hh = pad((remain / 60 / 60) % 60);
+                    var mm = pad((remain / 60) % 60);
+                    var ss = pad(remain % 60);
+                    document.getElementById('pf1Departure').innerHTML = hh + ":" + mm + ":" + ss;
+                    var box = document.getElementById('palletforce1')
+                    box.addEventListener('click', function() { departed('palletforce1') });
+                    if( hh < 1 && mm >= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.add("arrive");
+                    }else if( hh == 0 && mm <= 10 ){
+                        box.classList.add("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }else if( hh == 0 && mm <= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.add("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }
+                    setTimeout(tick, 1000);
+                }
+
+                document.addEventListener('DOMContentLoaded', tick);
+            })();
+            (function() {
+                var start = new Date;
+                start.setHours(20, 30, 0);
+
+                function pad(num) {
+                    return ("0" + parseInt(num)).substr(-2);
+                }
+
+                function tick() {
+                    var now = new Date;
+                    if (now > start) {
+                    start.setDate(start.getDate() + 1);
+                    }
+                    if(document.getElementById('palletforce2').classList.contains('departed') == true){
+                        document.getElementById('pf2Departure').innerHTML = "Departed";
+                        return;
+                    }
+                    var remain = ((start - now) / 1000);
+                    var hh = pad((remain / 60 / 60) % 60);
+                    var mm = pad((remain / 60) % 60);
+                    var ss = pad(remain % 60);
+                    document.getElementById('pf2Departure').innerHTML = hh + ":" + mm + ":" + ss;
+                    var box = document.getElementById('palletforce2')
+                    box.addEventListener('click', function() { departed('palletforce2') });
+                    if( hh < 1 && mm >= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.add("arrive");
+                    }else if( hh == 0 && mm <= 10 ){
+                        box.classList.add("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }else if( hh == 0 && mm <= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.add("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }
+                    setTimeout(tick, 1000);
+                }
+
+                document.addEventListener('DOMContentLoaded', tick);
+            })();
+            (function() {
+                var start = new Date;
+                start.setHours(21, 0, 0);
+
+                function pad(num) {
+                    return ("0" + parseInt(num)).substr(-2);
+                }
+
+                function tick() {
+                    var now = new Date;
+                    if (now > start) {
+                    start.setDate(start.getDate() + 1);
+                    }
+                    if(document.getElementById('palletforce3').classList.contains('departed') == true){
+                        document.getElementById('pf3Departure').innerHTML = "Departed";
+                        return;
+                    }
+                    var remain = ((start - now) / 1000);
+                    var hh = pad((remain / 60 / 60) % 60);
+                    var mm = pad((remain / 60) % 60);
+                    var ss = pad(remain % 60);
+                    document.getElementById('pf3Departure').innerHTML = hh + ":" + mm + ":" + ss;
+                    var box = document.getElementById('palletforce3')
+                    box.addEventListener('click', function() { departed('palletforce3') });
+                    if( hh < 1 && mm >= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.add("arrive");
+                    }else if( hh == 0 && mm <= 10 ){
+                        box.classList.add("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }else if( hh == 0 && mm <= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.add("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }
+                    setTimeout(tick, 1000);
+                }
+
+                document.addEventListener('DOMContentLoaded', tick);
+            })();
+            (function() {
+                var start = new Date;
+                start.setHours(19, 30, 0);
+
+                function pad(num) {
+                    return ("0" + parseInt(num)).substr(-2);
+                }
+
+                function tick() {
+                    var now = new Date;
+                    if (now > start) {
+                    start.setDate(start.getDate() + 1);
+                    }
+                    if(document.getElementById('palletline').classList.contains('departed') == true){
+                        document.getElementById('plDeparture').innerHTML = "Departed";
+                        return;
+                    }
+                    var remain = ((start - now) / 1000);
+                    var hh = pad((remain / 60 / 60) % 60);
+                    var mm = pad((remain / 60) % 60);
+                    var ss = pad(remain % 60);
+                    document.getElementById('plDeparture').innerHTML = hh + ":" + mm + ":" + ss;
+                    var box = document.getElementById('palletline')
+                    box.addEventListener('click', function() { departed('palletline') });
+                    if( hh < 1 && mm >= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.add("arrive");
+                    }else if( hh == 0 && mm <= 10 ){
+                        box.classList.add("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }else if( hh == 0 && mm <= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.add("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }
+                    setTimeout(tick, 1000);
+                }
+
+                document.addEventListener('DOMContentLoaded', tick);
+            })();
+            (function() {
+                var start = new Date;
+                start.setHours(19, 30, 0);
+
+                function pad(num) {
+                    return ("0" + parseInt(num)).substr(-2);
+                }
+
+                function tick() {
+                    var now = new Date;
+                    if (now > start) {
+                    start.setDate(start.getDate() + 1);
+                    }
+                    if(document.getElementById('europa').classList.contains('departed') == true){
+                        document.getElementById('europaDeparture').innerHTML = "Departed";
+                        return;
+                    }
+                    var remain = ((start - now) / 1000);
+                    var hh = pad((remain / 60 / 60) % 60);
+                    var mm = pad((remain / 60) % 60);
+                    var ss = pad(remain % 60);
+                    document.getElementById('europaDeparture').innerHTML = hh + ":" + mm + ":" + ss;
+                    var box = document.getElementById('europa')
+                    box.addEventListener('click', function() { departed('europa') });
+                    if( hh < 1 && mm >= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.add("arrive");
+                    }else if( hh == 0 && mm <= 10 ){
+                        box.classList.add("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }else if( hh == 0 && mm <= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.add("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }
+                    setTimeout(tick, 1000);
+                }
+
+                document.addEventListener('DOMContentLoaded', tick);
+            })();
+            (function() {
+                var start = new Date;
+                start.setHours(18, 0, 0);
+
+                function pad(num) {
+                    return ("0" + parseInt(num)).substr(-2);
+                }
+
+                function tick() {
+                    var now = new Date;
+                    if (now > start) {
+                    start.setDate(start.getDate() + 1);
+                    }
+                    if(document.getElementById('gefco').classList.contains('departed') == true){
+                        document.getElementById('gefcoDeparture').innerHTML = "Departed";
+                        return;
+                    }
+                    var remain = ((start - now) / 1000);
+                    var hh = pad((remain / 60 / 60) % 60);
+                    var mm = pad((remain / 60) % 60);
+                    var ss = pad(remain % 60);
+                    document.getElementById('gefcoDeparture').innerHTML = hh + ":" + mm + ":" + ss;
+                    var box = document.getElementById('gefco')
+                    box.addEventListener('click', function() { departed('gefco') });
+                    if( hh < 1 && mm >= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.add("arrive");
+                    }else if( hh == 0 && mm <= 10 ){
+                        box.classList.add("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }else if( hh == 0 && mm <= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.add("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }
+                    setTimeout(tick, 1000);
+                }
+
+                document.addEventListener('DOMContentLoaded', tick);
+            })();
+            (function() {
+                var start = new Date;
+                start.setHours(18, 30, 0);
+
+                function pad(num) {
+                    return ("0" + parseInt(num)).substr(-2);
+                }
+
+                function tick() {
+                    var now = new Date;
+                    if (now > start) {
+                    start.setDate(start.getDate() + 1);
+                    }
+                    if(document.getElementById('tvs').classList.contains('departed') == true){
+                        document.getElementById('tvsDeparture').innerHTML = "Departed";
+                        return;
+                    }
+                    var remain = ((start - now) / 1000);
+                    var hh = pad((remain / 60 / 60) % 60);
+                    var mm = pad((remain / 60) % 60);
+                    var ss = pad(remain % 60);
+                    document.getElementById('tvsDeparture').innerHTML = hh + ":" + mm + ":" + ss;
+                    var box = document.getElementById('tvs')
+                    box.addEventListener('click', function() { departed('tvs') });
+                    if( hh < 1 && mm >= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.add("arrive");
+                    }else if( hh == 0 && mm <= 10 ){
+                        box.classList.add("departure");
+                        box.classList.remove("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }else if( hh == 0 && mm <= 30 ){
+                        box.classList.remove("departure");
+                        box.classList.add("loaded");
+                        box.classList.remove("basic");
+                        box.classList.remove("arrive");
+                    }
+                    setTimeout(tick, 1000);
+                }
+
+                document.addEventListener('DOMContentLoaded', tick);
+            })();
+        </script>
+    </body>
+</html>
